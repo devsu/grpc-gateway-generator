@@ -12,6 +12,7 @@ A script to generate a ready to use [grpc-gateway](https://github.com/grpc-ecosy
 - Install [grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway) dependencies. (ProtocolBuffers 3.0.0-beta-3 or later), and the following packages:
 
 ```bash
+go get -u google.golang.org/grpc
 go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 go get -u github.com/golang/protobuf/protoc-gen-go
