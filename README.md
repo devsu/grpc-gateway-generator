@@ -2,6 +2,8 @@
 
 A script to generate a ready to use [grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway), with swagger, by just providing the protos and a simple configuration file.
 
+**Status:** Alpha, it's not production ready yet. See TODO list below.
+
 ## Installation
 
 ### Prerequisites
@@ -75,7 +77,16 @@ git clone https://github.com/devsu/grpc-gateway-generator
   ```bash
   ./generate.sh example/protos example/config.json example/generated 
   ```
-  
+
+## TODO
+
+- Support TLS in both, the gateway, and the backends
+- Make swagger creation optional
+- Test on more OSs, currently only tested on Mac an Alpine
+- Clean up the script
+- Allow to configure authorization (currently it activates bearer authorization by default)
+- Upgrade swagger-ui?
+
 ## License and Credits
 
 Devsu LLC. MIT License. Copyright 2017. 
