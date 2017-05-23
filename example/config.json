@@ -4,12 +4,12 @@
   },
   "backends": [
     {
-      "folder": "myapp",
+      "package": "myapp",
       "backend": "localhost:3000",
       "basePath": "/sample/greeter/"
     },
     {
-      "folder": "myapp/mysubapp",
+      "package": "myapp.mysubapp",
       "backend": "localhost:3000",
       "basePath": "/sample/another-greeter/"
     }

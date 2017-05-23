@@ -42,11 +42,32 @@ git clone https://github.com/devsu/grpc-gateway-generator
   
   The backends is an array of objects with 3 properties: 
   
-    - `folder`: name of the package, but as folder. It's the place where the stubs will be auto-generated.
+    - `package`: name of the package.
     - `backend`: what addres the GRPC server is running.
     - `basePath`: what's the base url for the services on this proto file.
 
-  See [config.json](https://github.com/devsu/grpc-gateway-generator/blob/master/example/config.json) for an example of how it should look.
+  See [config.json](https://github.com/devsu/grpc-gateway-generator/blob/master/example/config.json) for an example of how it should look:
+  
+  ```json
+    {
+      "gateway": {
+        "listen": ":9090"
+      },
+      "backends": [
+        {
+          "package": "myapp",
+          "backend": "localhost:3000",
+          "basePath": "/sample/greeter/"
+        },
+        {
+          "package": "myapp.mysubapp",
+          "backend": "localhost:3000",
+          "basePath": "/sample/another-greeter/"
+        }
+      ]
+    }
+  ```
+  
 - Then you just need to run the command with the right arguments.
 
   For example, to create a grpc-gateway using the information in the example:

@@ -81,7 +81,7 @@ SECURITY_DEFINITIONS='"securityDefinitions":{"Bearer":{"type":"apiKey","name":"A
 find ${DEFINITIONS_PATH} -type f -name "*.json" -exec sed -i '' -e "\$s/}/,${SECURITY_DEFINITIONS}}/" {} \;
 
 echo "MODIFYING... grpc-gateway.go"
-FOLDERS=$(cat ${CONFIG_FILE} | jq '.backends | .[] | .folder' | sed -e 's/"//g')
+FOLDERS=$(cat ${CONFIG_FILE} | jq '.backends | .[] | .package' | sed -e 's|"||g' -e 's|\.|/|g')
 BACKENDS=($(cat ${CONFIG_FILE} | jq '.backends | .[] | .backend'))
 BASE_PATHS=($(cat ${CONFIG_FILE} | jq '.backends | .[] | .basePath'))
 COUNT=0;
