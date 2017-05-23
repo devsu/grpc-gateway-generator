@@ -9,6 +9,12 @@ CONFIG_FILE=${2}
 DESTINATION_PATH=${3}
 TEMPLATE_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/template"
 
+OS=$(uname -s)
+SED_OPTS="-i"
+if [ $OS = "Darwin" ]; then
+  SED_OPTS="-i ''"
+fi
+
 echo "GENERATING GATEWAY:"
 echo " -> protos from '${PROTOS_PATH}'"
 echo " -> config from '${CONFIG_FILE}'"
@@ -70,7 +76,7 @@ mv ${DESTINATION_PATH}/http.proto ${PROTOS_PATH}/google/api/
 echo "GENERATING... swagger list of files"
 echo "[" >> ${DEFINITIONS_PATH}/list.json
 find ${DEFINITIONS_PATH} -type f -name "*.json" -exec echo "\"{}\"," >> ${DEFINITIONS_PATH}/list.json \;
-sed -i '' -e "s|${DESTINATION_PATH}||g" \
+sed $SED_OPTS -e "s|${DESTINATION_PATH}||g" \
   -e '/list.json",/d' \
   -e '$s/,$//g' \
   "${DEFINITIONS_PATH}/list.json"
@@ -78,7 +84,7 @@ echo "]" >> ${DEFINITIONS_PATH}/list.json
 
 echo "MODIFYING... swagger files, to include authorization bearer"
 SECURITY_DEFINITIONS='"securityDefinitions":{"Bearer":{"type":"apiKey","name":"Authorization","in":"header"}}';
-find ${DEFINITIONS_PATH} -type f -name "*.json" -exec sed -i '' -e "\$s/}/,${SECURITY_DEFINITIONS}}/" {} \;
+find ${DEFINITIONS_PATH} -type f -name "*.json" -exec sed $SED_OPTS -e "\$s/}/,${SECURITY_DEFINITIONS}}/" {} \;
 
 echo "MODIFYING... grpc-gateway.go"
 FOLDERS=$(cat ${CONFIG_FILE} | jq '.backends | .[] | .package' | sed -e 's|"||g' -e 's|\.|/|g')
@@ -87,7 +93,7 @@ BASE_PATHS=($(cat ${CONFIG_FILE} | jq '.backends | .[] | .basePath'))
 COUNT=0;
 for FOLDER in ${FOLDERS}
 do
-  sed -i '' "s|.*ADD IMPORTS HERE.*|  gw${COUNT} \"./stubs/${FOLDER}\""'\
+  sed $SED_OPTS "s|.*ADD IMPORTS HERE.*|  gw${COUNT} \"./stubs/${FOLDER}\""'\
 &|' "${DESTINATION_PATH}/grpc-gateway.go"
 
   METHODS=$(find ${STUBS_PATH}/${FOLDER} -type f -maxdepth 1 -print | xargs grep -E "Register(.*)FromEndpoint" -ho | uniq)
@@ -95,7 +101,7 @@ do
   for ENDPOINT_METHOD in ${METHODS}
   do
     PARAMETERS="${BACKENDS[COUNT]}, ${BASE_PATHS[COUNT]}, gw${COUNT}.${ENDPOINT_METHOD}"
-    sed -i '' -e "s|.*ADD ENDPOINTS HERE.*|  loadEndpoint(ctx, serverMux, ${PARAMETERS})"'\
+    sed $SED_OPTS -e "s|.*ADD ENDPOINTS HERE.*|  loadEndpoint(ctx, serverMux, ${PARAMETERS})"'\
 &|' "${DESTINATION_PATH}/grpc-gateway.go"
   done
   COUNT=$((COUNT+1))
@@ -103,12 +109,4 @@ done
 
 echo "CONFIGURING... grpc-gateway.go"
 LISTEN=$(cat ${CONFIG_FILE} | jq '.gateway | .listen')
-sed -i '' -e "s|\"LISTEN\"|${LISTEN}|" "${DESTINATION_PATH}/grpc-gateway.go"
-
-#echo "RUNNING SERVICES..."
-#
-#cd /go/src/app/
-#cp -r google ../google
-#
-#go build main.go
-#go run main.go
+sed $SED_OPTS -e "s|\"LISTEN\"|${LISTEN}|" "${DESTINATION_PATH}/grpc-gateway.go"
