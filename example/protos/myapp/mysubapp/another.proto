@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package myapp.mysubapp;
+
+import "google/api/annotations.proto";
+
+message Person {
+  string name = 1;
+}
+
+message GreetingResponse {
+  string greeting = 1;
+}
+
+service AnotherGreeterService {
+  rpc SayHello (Person) returns (GreetingResponse) {
+    option (google.api.http) = {
+      get: "/sample/another-greeter/hi/{name}"
+      body: ""
+    };
+  }
+}

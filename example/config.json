@@ -1,0 +1,17 @@
+{
+  "gateway": {
+    "listen": ":9090"
+  },
+  "backends": [
+    {
+      "folder": "myapp",
+      "backend": "localhost:3000",
+      "basePath": "/sample/greeter/"
+    },
+    {
+      "folder": "myapp/mysubapp",
+      "backend": "localhost:3000",
+      "basePath": "/sample/another-greeter/"
+    }
+  ]
+}
