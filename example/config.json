@@ -6,12 +6,16 @@
     {
       "package": "myapp",
       "backend": "localhost:3000",
-      "basePath": "/sample/greeter/"
+      "services": {
+        "GreeterService": "/sample/greeter/"
+      }
     },
     {
       "package": "myapp.mysubapp",
       "backend": "localhost:3000",
-      "basePath": "/sample/another-greeter/"
+      "services": {
+        "AnotherGreeterService": "/sample/another-greeter/"
+      }
     }
   ]
 }
