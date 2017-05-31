@@ -77,11 +77,10 @@ mv ${DESTINATION_PATH}/http.proto ${PROTOS_PATH}/google/api/
 echo "GENERATING... swagger list of files"
 echo "[" >> ${DEFINITIONS_PATH}/list.json
 find ${DEFINITIONS_PATH} -type f -name "*.json" -exec echo "\"{}\"," >> ${DEFINITIONS_PATH}/list.json \;
-sed ${SED_OPTS} -e "s|${DESTINATION_PATH}||g" \
-  -e '/list.json",/d' \
-  -e '/google\/protobuf/d' \
-  -e '$s/,$//g' \
-  "${DEFINITIONS_PATH}/list.json"
+sed ${SED_OPTS} -e "s|${DESTINATION_PATH}||g" "${DEFINITIONS_PATH}/list.json"
+sed ${SED_OPTS} -e '/list.json",/d' "${DEFINITIONS_PATH}/list.json"
+sed ${SED_OPTS} -e '/google\/protobuf/d' "${DEFINITIONS_PATH}/list.json"
+sed ${SED_OPTS} -e '$s/,$//g' "${DEFINITIONS_PATH}/list.json"
 echo "]" >> ${DEFINITIONS_PATH}/list.json
 
 echo "MODIFYING... swagger files, to include authorization bearer"
