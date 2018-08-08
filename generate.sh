@@ -47,23 +47,23 @@ mv ${PROTOS_PATH}/google/api/annotations.proto ${DESTINATION_PATH}
 mv ${PROTOS_PATH}/google/api/http.proto ${DESTINATION_PATH}
 
 echo "GENERATING... stubs go"
-find ${PROTOS_PATH} -type f -name "*.proto" -exec protoc -I${PROTOS_PATH} \
+find -L ${PROTOS_PATH} -not -path '*/\.*' -type f -name "*.proto" -exec protoc -I${PROTOS_PATH} \
   --proto_path=${PROTOS_PATH} \
   -I${GOPATH}/src \
   -I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
   --go_out=plugins=grpc:${STUBS_PATH} \
-	{} \;
+  {} \;
 
 echo "GENERATING... reverse-proxy"
-find ${PROTOS_PATH} -type f -name "*.proto" -exec protoc -I${PROTOS_PATH} \
+find -L ${PROTOS_PATH} -not -path '*/\.*' -type f -name "*.proto" -exec protoc -I${PROTOS_PATH} \
   --proto_path=${PROTOS_PATH} \
   -I${GOPATH}/src \
   -I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
   --grpc-gateway_out=logtostderr=true:${STUBS_PATH} \
-	{} \;
+  {} \;
 
 echo "GENERATING... swagger definitions"
-find ${PROTOS_PATH} -type f -name "*.proto" -exec protoc -I${PROTOS_PATH} \
+find -L ${PROTOS_PATH} -not -path '*/\.*' -type f -name "*.proto" -exec protoc -I${PROTOS_PATH} \
   --proto_path=${PROTOS_PATH} \
   -I${GOPATH}/src \
   -I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
